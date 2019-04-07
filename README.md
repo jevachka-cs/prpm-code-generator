@@ -1,5 +1,5 @@
-# Siebel Open UI PR/PM Code Generator
+# Custom Siebel Open UI PR/PM Code Generator
 
-Welcome to the new home for the code generator.
+Forked from [duncanford/prpm-code-generator](https://github.com/duncanford/prpm-code-generator)
 
-[Click here](http://duncanford.github.io/prpm-code-generator) to get started.
+[Click here](https://jevachka-cs.github.io/prpm-code-generator) to get started.
