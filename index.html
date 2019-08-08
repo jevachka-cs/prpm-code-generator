@@ -25,157 +25,155 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<head>
+    <head>
+        <link rel="stylesheet" type="text/css" href="//codemirror.net/lib/codemirror.css">
+        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <title>Siebel PR/PM Code Generator</title>
+        <style>
+            #code {
+                border: 1px solid black;
+            }
+            body {
+                background:#FFF;
+                color: #000;
+            }
+            .CodeMirror {
+                height: auto;
+            }
 
-	<link rel="stylesheet" type="text/css" href="//codemirror.net/lib/codemirror.css">
-	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-	<title>Siebel PR/PM Code Generator</title>
-	<style>
-	#code {
-		border: 1px solid black;
-	}
-	body {
-		background:#FFF;
-		color: #000;
-	}
-	.CodeMirror {
-		height: auto;
-	}
+            .bs-callout {
+                padding: 20px;
+                margin: 20px 0px;
+                border-width: 1px 1px 1px 5px;
+                border-style: solid;
+                border-color: #EEE;
+                -moz-border-top-colors: none;
+                -moz-border-right-colors: none;
+                -moz-border-bottom-colors: none;
+                -moz-border-left-colors: none;
+                border-image: none;
+                border-radius: 3px;
+            }
 
-	.bs-callout {
-		padding: 20px;
-		margin: 20px 0px;
-		border-width: 1px 1px 1px 5px;
-		border-style: solid;
-		border-color: #EEE;
-		-moz-border-top-colors: none;
-		-moz-border-right-colors: none;
-		-moz-border-bottom-colors: none;
-		-moz-border-left-colors: none;
-		border-image: none;
-		border-radius: 3px;
-	}
+            .bs-callout-info {
+                border-left-color: #5BC0DE;
+            }
 
-	.bs-callout-info {
-		border-left-color: #5BC0DE;
-	}
+            .bs-callout-danger {
+                border-left-color: #D9534F;
+            }
+            
+            img.githublogo {
+                height: 72px;
+                float: right;
+                top: 6px;
+                position: relative;
+            }
+            
+            .tooltip {
+                font-size:1.2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+        <div class="row">
+            <H1 class="col-md-8">Open UI PR/PM Code Template Generator</H1>
+            <div class="col-md-4" id="githubkittens"><a href="//github.com/jevachka-cs/prpm-code-generator"><img class="githublogo" title="Go to GitHub" data-toggle="tooltip" data-placement="bottom" data-delay='{"hide":5000}' data-html="true" src="//github.githubassets.com/images/modules/logos_page/Octocat.png" /></a></div>
+        </div>
+            <p>Or perhaps you were looking for the <a href="//tiny.cc/pw-code-generator">PW generator</a>, or the <a href="//tiny.cc/disa-code-generator">DISA generator</a>?</p>
 
-	.bs-callout-danger {
-		border-left-color: #D9534F;
-	}
-	
-	img.githublogo {
-		height: 72px;
-		float: right;
-		top: 6px;
-		position: relative;
-	}
-	
-	.tooltip {
-		font-size:1.2em;
-	}
-	</style>
-</head>
-<div class="container">
-<div class="row">
-	<H1 class="col-md-8">Open UI PR/PM Code Template Generator</H1>
-	<div class="col-md-4" id="githubkittens"><a href="//github.com/jevachka-cs/prpm-code-generator"><img class="githublogo" title="Go to GitHub" data-toggle="tooltip" data-placement="bottom" data-delay='{"hide":5000}' data-html="true" src="//github.githubassets.com/images/modules/logos_page/Octocat.png" /></a></div>
-</div>
-    <p>Or perhaps you were looking for the <a href="//tiny.cc/pw-code-generator">PW generator</a>, or the <a href="//tiny.cc/disa-code-generator">DISA generator</a>?</p>
-
-<H2>What sort of template would you like</H2>
-<form class="form-horizontal" role="form">
-    <div class="form-group">
-        <label for"PRPM" class="col-sm-2 control-label"><abbr title="Physical Renderer or Presentation Model">PR or PM?</abbr></label>
-        <div class="col-sm-8">
-            <select class="form-control" id="PRPM">
-                <option value="PR">PR</option>
-                <option value="PM">PM</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for "Object" class="col-sm-2 control-label">Type</label>
-        <div class="col-sm-8">
-            <select class="form-control" id="Object">
-                <option value="DesktopForm">Desktop Form Applet</option>
-                <option value="DesktopList">Desktop List Applet</option>
-                <option value="DesktopTree">Desktop Tree Applet</option>
-                <option value="View">View</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for "Namer" class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-8">
-            <input id="Namer" class="form-control" value="BeautifulThing" placeholder="Name"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for "Logging" class="col-sm-2 control-label">Add Logging?</label>
-        <div class="col-sm-8">
-            <label class="radio-inline">
-                <input type="radio" name="Logging" id="Logging" value="Yes">Yes</input>
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="Logging" id="Logging" value="No" checked> No</input>
-            </label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for "UserProps" class="col-sm-2 control-label">Prepare user properties</label>
-        <div class="col-sm-8">
-            <input id="UserProps" class="form-control" placeholder="comma,separated,please"/>
-        </div>
-	</div>
-	
-	<div class="form-group pm-methods-form">
-		<label for "Methods" class="col-sm-2 control-label">Add Methods</label>
-        <div class="col-sm-2">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="IM" class="pm-method-cb"/>
-                    InvokeMethod
-                </label>
+        <H2>What sort of template would you like</H2>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for"PRPM" class="col-sm-2 control-label"><abbr title="Physical Renderer or Presentation Model">PR or PM?</abbr></label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="PRPM">
+                        <option value="PR">PR</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="PE" class="pm-method-cb"/>
-                    PostExecute
-                </label>
+            <div class="form-group">
+                <label for "Object" class="col-sm-2 control-label">Type</label>
+                <div class="col-sm-8">
+                    <select class="form-control" id="Object">
+                        <option value="DesktopForm">Desktop Form Applet</option>
+                        <option value="DesktopList">Desktop List Applet</option>
+                        <option value="DesktopTree">Desktop Tree Applet</option>
+                        <option value="View">View</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="SS" class="pm-method-cb"/>
-                    ShowSelection
-                </label>
+            <div class="form-group">
+                <label for "Namer" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-8">
+                    <input id="Namer" class="form-control" value="BeautifulThing" placeholder="Name"/>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="FC" class="pm-method-cb"/>
-                    FieldChange
-                </label>
+            <div class="form-group">
+                <label for "Logging" class="col-sm-2 control-label">Add Logging?</label>
+                <div class="col-sm-8">
+                    <label class="radio-inline">
+                        <input type="radio" name="Logging" id="Logging" value="Yes">Yes</input>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="Logging" id="Logging" value="No" checked> No</input>
+                    </label>
+                </div>
             </div>
+            <div class="form-group">
+                <label for "UserProps" class="col-sm-2 control-label">Prepare user properties</label>
+                <div class="col-sm-8">
+                    <input id="UserProps" class="form-control" placeholder="comma,separated,please"/>
+                </div>
+            </div>
+            
+            <div class="form-group pm-methods-form">
+                <label for "Methods" class="col-sm-2 control-label">Add Methods</label>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="IM" class="pm-method-cb"/>
+                            InvokeMethod
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="PE" class="pm-method-cb"/>
+                            PostExecute
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="SS" class="pm-method-cb"/>
+                            ShowSelection
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="FC" class="pm-method-cb"/>
+                            FieldChange
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="bs-callout bs-callout-info" id="instruction"></div>
+        <div id="code" class="code"></div>
         </div>
-    </div>
-</form>
-<div class="bs-callout bs-callout-info" id="instruction"></div>
-<div id="code" class="code"></div>
-</div>
 
-<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-<script src="//codemirror.net/lib/codemirror.js"></script>
-<script src="//codemirror.net/mode/javascript/javascript.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.min.js"></script>
-
-<script>	
-let cm,strCode,addLogging=!1,tweaked=!1;const storeDefExtPR={"View-def":"siebel/viewpr","View-ext":"ViewPR","DesktopList-def":"siebel/jqgridrenderer","DesktopList-ext":"JQGridRenderer","DesktopTree-def":"siebel/treeappletphyrenderer","DesktopTree-ext":"TreeAppletPR","DesktopForm-def":"siebel/phyrenderer","DesktopForm-ext":"PhysicalRenderer"},storeDefExtPM={"View-def":"siebel/viewpm","View-ext":"ViewPM","DesktopList-def":"siebel/listpmodel","DesktopList-ext":"ListPresentationModel","DesktopTree-def":"siebel/explorerpmodel","DesktopTree-ext":"ExplorerPresentationModel","DesktopForm-def":"siebel/pmodel","DesktopForm-ext":"PresentationModel"};$("#Object").on("change",function(){GenerateCode()}),$("#PRPM").on("change",function(){"PM"===$(this).val()?$(".pm-methods-form").show():$(".pm-methods-form").hide(),GenerateCode()}),$("#Namer").on("keyup",function(){GenerateCode()}),$("#UserProps").on("keyup",function(){GenerateCode()}),$("input:radio[name=Logging]").click(function(){addLogging="Yes"==$(this).val(),GenerateCode()}),$(".pm-method-cb").on("change",function(){GenerateCode()}),$(document).ready(function(){$("[data-toggle=\"tooltip\"]").tooltip(),SetDefaultValues(),GenerateCode()});function addCode(a){return a+"\n"}function addPRLog(a){return addLogging?`SiebelJS.Log(\`[TemplatePR]: ${a}\`);\n`:""}function addPMLog(a){return addLogging?`SiebelJS.Log(\`[TemplatePM]: ${a}\`);\n`:""}function GenerateCode(){strCode="";const a=$("#UserProps").val().split(","),b=$("input#IM").prop("checked"),c=$("input#PE").prop("checked"),d=$("input#SS").prop("checked"),e=$("input#FC").prop("checked");switch($("#PRPM").val()){case"PR":if(strCode+=addCode(`if (typeof(SiebelAppFacade.TemplatePR) === "undefined") {`),strCode+=addCode(`SiebelJS.Namespace("SiebelAppFacade.TemplatePR");`),strCode+=addCode(`define("siebel/custom/TemplatePR", ["${storeDefExtPR[$("#Object").val()+"-def"]}"], function () {`),strCode+=addCode(`SiebelAppFacade.TemplatePR = (function () {`),strCode+=addCode(""),strCode+=addCode(`function TemplatePR(pm) {`),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.constructor.apply(this, arguments);`),strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`SiebelJS.Extend(TemplatePR, SiebelAppFacade.${storeDefExtPR[$("#Object").val()+"-ext"]});`),strCode+=addCode(""),strCode+=addCode(`TemplatePR.prototype.Init = function () {`),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.Init.apply(this, arguments);`),strCode+=addPRLog("Init method reached."),strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`TemplatePR.prototype.ShowUI = function () {`),strCode+=addPRLog("ShowUI method reached."),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.ShowUI.apply(this, arguments);`),0<a.length)for(prop in a)""!==a[prop]&&(strCode+=addPRLog(`User Property ${a[prop]} has value: \${this.GetPM().Get("${a[prop]}")}`));strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`TemplatePR.prototype.BindData = function (bRefresh) {`),strCode+=addPRLog("BindData method reached."),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.BindData.apply(this, arguments);`),strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`TemplatePR.prototype.BindEvents = function () {`),strCode+=addPRLog("BindEvents method reached."),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.BindEvents.apply(this, arguments);`),strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`TemplatePR.prototype.EndLife = function () {`),strCode+=addPRLog("EndLife method reached."),strCode+=addCode(`SiebelAppFacade.TemplatePR.superclass.EndLife.apply(this, arguments);`),strCode+=addCode(`}`),strCode+=addCode(""),strCode+=addCode(`return TemplatePR;`),strCode+=addCode(`}());`),strCode+=addCode(`return "SiebelAppFacade.TemplatePR";`),strCode+=addCode(`})`),strCode+=addCode("}");break;case"PM":if(strCode+=addCode("if (typeof(SiebelAppFacade.TemplatePM) === \"undefined\") {"),strCode+=addCode("SiebelJS.Namespace(\"SiebelAppFacade.TemplatePM\");"),strCode+=addCode(`define("siebel/custom/TemplatePM", ["${storeDefExtPM[$("#Object").val()+"-def"]}"], function () {`),strCode+=addCode("SiebelAppFacade.TemplatePM = (function () {"),0<a.length&&""!==$("#UserProps").val()&&(strCode+=addCode(""),strCode+=addCode("var consts = SiebelJS.Dependency(\"SiebelApp.Constants\");"),strCode+=addCode("var utils = SiebelJS.Dependency(\"SiebelApp.Utils\");")),strCode+=addCode(""),strCode+=addCode("function TemplatePM(pm) {"),strCode+=addCode("SiebelAppFacade.TemplatePM.superclass.constructor.apply(this, arguments);"),strCode+=addCode("}"),strCode+=addCode(""),strCode+=addCode(`SiebelJS.Extend(TemplatePM, SiebelAppFacade. ${storeDefExtPM[$("#Object").val()+"-ext"]});`),strCode+=addCode(""),strCode+=addCode("TemplatePM.prototype.Init = function () {"),strCode+=addCode("SiebelAppFacade.TemplatePM.superclass.Init.apply(this, arguments);"),b&&(strCode+=addCode(`this.AddMethod("InvokeMethod", this.PreInvokeMethod, {sequence : true, scope: this});`)),c&&(strCode+=addCode(`this.AddMethod("PostExecute", this.PostExecute, { sequence: true, scope: this});`)),d&&(strCode+=addCode(`this.AddMethod('ShowSelection', this.SelectionChanged, {sequence: false, scope: this});`)),e&&(strCode+=addCode(`this.AddMethod("FieldChange", this.OnFieldChange, {sequence:false, scope:this});`)),strCode+=addPMLog("Init method reached."),strCode+=addCode("}"),strCode+=addCode(""),b&&(strCode+=addCode("TemplatePM.prototype.PreInvokeMethod = function(methodName, psInArgs, lp, returnStructure)"),strCode+=addCode("{"),strCode+=addCode("let iOperation = \"ContinueOperation\""),strCode+=addCode(""),strCode+=addCode("switch (methodName)"),strCode+=addCode("{"),strCode+=addCode("case \"YourMethod\":\n//your code\nbreak;"),strCode+=addCode("}\n"),strCode+=addCode("if (iOperation === \"CancelOperation\")"),strCode+=addCode("returnStructure[\"CancelOperation\"] = true;"),strCode+=addCode("}"),strCode+=addCode("")),c&&(strCode+=addCode(`TemplatePM.prototype.PostExecute = function(methodName, psIn, psOut) {`),strCode+=addCode("// your code"),strCode+=addCode("}\n")),d&&(strCode+=addCode("TemplatePM.prototype.SelectionChanged = function() {"),strCode+=addCode("// your code"),strCode+=addCode("}\n")),e&&(strCode+=addCode(`TemplatePM.prototype.OnFieldChange = function(control, value) {`),strCode+=addCode(`// your code`),strCode+=addCode("}\n")),strCode+=addCode("TemplatePM.prototype.Setup = function (propSet) {"),strCode+=addPMLog("Setup method reached."),strCode+=addCode("SiebelAppFacade.TemplatePR.superclass.Setup.apply(this, arguments);"),0<a.length)for(prop in a)""!=a[prop]&&(strCode+=addCode("processCustomUserProperty.call(this,propSet,\""+a[prop]+"\")"));if(strCode+=addCode("}"),0<a.length){var f=!1;for(prop in a)""==a[prop]||f||(strCode+=addCode(""),strCode+=addCode("function processCustomUserProperty(propSet,propertyName) {"),"View"==$("#Object").val()?strCode+=addCode("var userProps = propSet.GetChildByType(consts.get(\"SWE_VIEW_PM_PS\"));"):(strCode+=addCode("var userProps = propSet.GetChildByType(consts.get(\"SWE_APPLET_PM_PS\"));"),strCode+=addCode("if (userProps) {"),strCode+=addCode("var propVal = userProps.GetProperty(propertyName);"),strCode+=addCode("if (!utils.IsEmpty(propVal)) {"),strCode+=addCode("this.AddProperty(propertyName, propVal);"),strCode+=addPMLog("\"+propertyName+\" user property was retrieved with value \" + propVal +\"."),strCode+=addCode("}} else {"),strCode+=addPMLog("Could not get the value of the \"+propertyName+\" user property."),strCode+=addCode("}"),strCode+=addCode("}"),f=!0))}strCode+=addCode(""),strCode+=addCode("return TemplatePM;"),strCode+=addCode("}()"),strCode+=addCode(");"),strCode+=addCode("return \"SiebelAppFacade.TemplatePM\";"),strCode+=addCode("})"),strCode+=addCode("}");}strCode=strCode.replace(/TemplatePR/g,$("#Namer").val()+$("#PRPM").val()),strCode=strCode.replace(/TemplatePM/g,$("#Namer").val()+$("#PRPM").val()),strCode=js_beautify(strCode,{brace_style:"expand,preserve-inline"}),$("#instruction").html("Copy and save the code below in your custom folder and call it <code>"+$("#Namer").val()+$("#PRPM").val()+".js</code>. Get the <strong>cASe</strong> right, it's important."),0<a.length&&"PR"===$("#PRPM").val()&&""!==$("#UserProps").val()&&$("#instruction").append("<br/><mark>NOTE</mark>:To use custom user properties you will also need a custom PM."),$("#code").text(strCode),$(".code").each(function(){var a=$(this),b=a.html(),c=$("<div/>").html(b).text();a.empty(),CodeMirror(this,{value:c,mode:"javascript",lineNumbers:!a.is(".inline"),readOnly:!0})})}function SetDefaultValues(){$("#PRPM").val("PR"),$(".pm-methods-form").hide(),$("#Namer").val("BeautifulThing"),$("#Object").val("DesktopList"),$("#UserProps").val("")}
-</script>
+        <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="//codemirror.net/lib/codemirror.js"></script>
+        <script src="//codemirror.net/mode/javascript/javascript.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.min.js"></script>
+        <script src="./main.js"></script>
+    </body>
 </html>
