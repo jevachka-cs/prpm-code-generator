@@ -229,17 +229,17 @@ function GenerateCode() {
                     "TemplatePM.prototype.PreInvokeMethod = function(methodName, psInArgs, lp, returnStructure)"
                 );
                 strCode += addCode("{");
-                strCode += addCode('let iOperation = "ContinueOperation"');
+                strCode += addCode('const customMethods = ["YourMethod"]');
                 strCode += addCode("");
                 strCode += addCode("switch (methodName)");
                 strCode += addCode("{");
                 strCode += addCode('case "YourMethod":\n//your code\nbreak;');
                 strCode += addCode("}\n");
-                strCode += addCode('if (iOperation === "CancelOperation")');
+                strCode += addCode('if (customMethods.includes(methodName)) {');
                 strCode += addCode(
                     'returnStructure["CancelOperation"] = true;'
                 );
-                strCode += addCode("\nSiebelApp.S_App.uiStatus.Free();");
+                strCode += addCode("\nSiebelApp.S_App.uiStatus.Free(); }");
                 strCode += addCode("}");
                 strCode += addCode("");
             }
